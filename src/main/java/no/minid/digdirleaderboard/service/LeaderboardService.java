@@ -22,7 +22,7 @@ public class LeaderboardService {
             String line;
             while ((line = reader.readLine()) != null) {
                 // Parse each line based on your file format
-                // Example for CSV: name,weight,date
+                // Example for CSV: name,weight
                 String[] parts = line.split(",");
                 records.add(new WeightRecord(
                         parts[0].trim(),

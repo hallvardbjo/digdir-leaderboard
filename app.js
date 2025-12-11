@@ -21,6 +21,14 @@ class LeaderboardApp {
             });
         });
 
+        // Lift header clicks for focus mode
+        document.querySelectorAll('.lift-header').forEach(header => {
+            header.addEventListener('click', (e) => {
+                const liftType = e.target.dataset.lift;
+                this.focusLift(liftType);
+            });
+        });
+
         // Add athlete button
         document.getElementById('addAthleteBtn').addEventListener('click', () => {
             this.openModal();
@@ -183,6 +191,25 @@ class LeaderboardApp {
         document.getElementById(`${tabName}-tab`).classList.add('active');
     }
 
+    focusLift(liftType) {
+        // Only apply to main lifts tab, not total
+        const mainLiftsTab = document.getElementById('lifts-tab');
+        if (!mainLiftsTab.classList.contains('active')) return;
+
+        // Remove focus from all lifts in main tab
+        mainLiftsTab.querySelectorAll('.leaderboard-section').forEach(section => {
+            section.classList.remove('focused');
+        });
+
+        // Add focus to clicked lift
+        const targetSection = mainLiftsTab.querySelector(`[data-lift="${liftType}"]`);
+        if (targetSection) {
+            targetSection.classList.add('focused');
+            // Re-render to show/hide podium
+            this.render();
+        }
+    }
+
     render() {
         this.renderLeaderboard('bench');
         this.renderLeaderboard('squat');
@@ -192,8 +219,7 @@ class LeaderboardApp {
 
     renderLeaderboard(liftType) {
         const tableId = liftType + 'Table';
-        const tbody = document.querySelector(`#${tableId} tbody`);
-        tbody.innerHTML = '';
+        const section = document.querySelector(`#${tableId}`).closest('.leaderboard-section');
 
         let sortedAthletes;
         if (liftType === 'total') {
@@ -207,6 +233,11 @@ class LeaderboardApp {
         }
 
         if (sortedAthletes.length === 0) {
+            // Remove any existing podium
+            const existingPodium = section.querySelector('.podium-container');
+            if (existingPodium) existingPodium.remove();
+
+            const tbody = document.querySelector(`#${tableId} tbody`);
             tbody.innerHTML = `
                 <tr>
                     <td colspan="4" class="empty-state">
@@ -217,29 +248,130 @@ class LeaderboardApp {
             return;
         }
 
-        sortedAthletes.forEach((athlete, index) => {
-            const rank = index + 1;
-            let rankClass = '';
-            if (rank === 1) rankClass = 'gold';
-            else if (rank === 2) rankClass = 'silver';
-            else if (rank === 3) rankClass = 'bronze';
+        // Check if this section should show podium (focused or total)
+        const shouldShowPodium = section.classList.contains('focused');
 
+        if (shouldShowPodium) {
+            // Get top 3 and rest
+            const top3 = sortedAthletes.slice(0, 3);
+            const rest = sortedAthletes.slice(3);
+
+            // Render podium for top 3
+            this.renderPodium(section, top3, liftType);
+
+            // Render table for rest
+            const tbody = document.querySelector(`#${tableId} tbody`);
+            tbody.innerHTML = '';
+
+            // Always show table header
+            const thead = document.querySelector(`#${tableId} thead`);
+            if (thead) thead.style.display = '';
+
+            rest.forEach((athlete, index) => {
+                const rank = index + 4; // Starts at 4th place
+                const value = liftType === 'total'
+                    ? athlete.bench + athlete.squat + athlete.deadlift
+                    : athlete[liftType];
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><span class="rank">${rank}</span></td>
+                    <td><span class="athlete-name">${this.escapeHtml(athlete.name)}</span></td>
+                    <td><span class="pr-value">${value.toFixed(1)}</span></td>
+                    <td class="actions">
+                        <button class="btn btn-edit" onclick="app.openModal(${athlete.id})">Edit</button>
+                        <button class="btn btn-danger" onclick="app.deleteAthlete(${athlete.id})">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        } else {
+            // Remove podium if exists
+            const existingPodium = section.querySelector('.podium-container');
+            if (existingPodium) existingPodium.remove();
+
+            // Show all athletes in table format
+            const tbody = document.querySelector(`#${tableId} tbody`);
+            tbody.innerHTML = '';
+
+            const thead = document.querySelector(`#${tableId} thead`);
+            if (thead) thead.style.display = '';
+
+            sortedAthletes.forEach((athlete, index) => {
+                const rank = index + 1;
+                const value = liftType === 'total'
+                    ? athlete.bench + athlete.squat + athlete.deadlift
+                    : athlete[liftType];
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><span class="rank">${this.getRankDisplay(rank)}</span></td>
+                    <td><span class="athlete-name">${this.escapeHtml(athlete.name)}</span></td>
+                    <td><span class="pr-value">${value.toFixed(1)}</span></td>
+                    <td class="actions">
+                        <button class="btn btn-edit" onclick="app.openModal(${athlete.id})">Edit</button>
+                        <button class="btn btn-danger" onclick="app.deleteAthlete(${athlete.id})">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+    }
+
+    renderPodium(section, top3, liftType) {
+        // Remove existing podium if any
+        const existingPodium = section.querySelector('.podium-container');
+        if (existingPodium) existingPodium.remove();
+
+        if (top3.length === 0) return;
+
+        // Create podium container
+        const podiumContainer = document.createElement('div');
+        podiumContainer.className = 'podium-container';
+
+        // Order for podium display: 2nd, 1st, 3rd (visual order)
+        const podiumOrder = [
+            top3[1], // 2nd place
+            top3[0], // 1st place
+            top3[2]  // 3rd place
+        ].filter(athlete => athlete); // Remove undefined if less than 3 athletes
+
+        const positions = ['second', 'first', 'third'];
+        const medals = ['🥈', '🥇', '🥉'];
+        const heights = ['140px', '180px', '120px'];
+
+        podiumOrder.forEach((athlete, index) => {
+            if (!athlete) return;
+
+            const actualRank = positions[index] === 'first' ? 1 : positions[index] === 'second' ? 2 : 3;
             const value = liftType === 'total'
                 ? athlete.bench + athlete.squat + athlete.deadlift
                 : athlete[liftType];
 
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td><span class="rank ${rankClass}">${this.getRankDisplay(rank)}</span></td>
-                <td><span class="athlete-name">${this.escapeHtml(athlete.name)}</span></td>
-                <td><span class="pr-value">${value.toFixed(1)}</span></td>
-                <td class="actions">
-                    <button class="btn btn-edit" onclick="app.openModal(${athlete.id})">Edit</button>
-                    <button class="btn btn-danger" onclick="app.deleteAthlete(${athlete.id})">Delete</button>
-                </td>
+            const podiumSpot = document.createElement('div');
+            podiumSpot.className = `podium-spot ${positions[index]}`;
+            podiumSpot.innerHTML = `
+                <div class="podium-athlete">
+                    <div class="podium-medal">${medals[index]}</div>
+                    <div class="podium-name">${this.escapeHtml(athlete.name)}</div>
+                    <div class="podium-value">${value.toFixed(1)} kg</div>
+                    <div class="podium-actions">
+                        <button class="btn btn-edit btn-small" onclick="app.openModal(${athlete.id})">Edit</button>
+                        <button class="btn btn-danger btn-small" onclick="app.deleteAthlete(${athlete.id})">Del</button>
+                    </div>
+                </div>
+                <div class="podium-stand" style="height: ${heights[index]}">
+                    <div class="podium-rank">${actualRank}</div>
+                </div>
             `;
-            tbody.appendChild(row);
+            podiumContainer.appendChild(podiumSpot);
         });
+
+        // Insert podium after sort controls but before the table
+        const sortControls = section.querySelector('.sort-controls');
+        if (sortControls) {
+            sortControls.after(podiumContainer);
+        }
     }
 
     getRankDisplay(rank) {

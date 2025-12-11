@@ -61,26 +61,8 @@
         <!-- Leaderboards -->
         <div class="tab-content active" id="lifts-tab">
             <div class="leaderboards">
-                <div class="leaderboard-section">
-                    <h2>🏋️ Bench Press</h2>
-                    <div class="sort-controls">
-                        <button class="sort-btn active" data-lift="bench">Sort by PR</button>
-                    </div>
-                    <table class="leaderboard-table" id="benchTable">
-                        <thead>
-                            <tr>
-                                <th>Rank</th>
-                                <th>Name</th>
-                                <th>PR (kg)</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-
-                <div class="leaderboard-section">
-                    <h2>🦵 Squat</h2>
+                <div class="leaderboard-section" data-lift="squat">
+                    <h2 class="lift-header" data-lift="squat">🦵 Squat</h2>
                     <div class="sort-controls">
                         <button class="sort-btn active" data-lift="squat">Sort by PR</button>
                     </div>
@@ -97,8 +79,26 @@
                     </table>
                 </div>
 
-                <div class="leaderboard-section">
-                    <h2>💀 Deadlift</h2>
+                <div class="leaderboard-section focused" data-lift="bench">
+                    <h2 class="lift-header" data-lift="bench">🏋️ Bench Press</h2>
+                    <div class="sort-controls">
+                        <button class="sort-btn active" data-lift="bench">Sort by PR</button>
+                    </div>
+                    <table class="leaderboard-table" id="benchTable">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Name</th>
+                                <th>PR (kg)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <div class="leaderboard-section" data-lift="deadlift">
+                    <h2 class="lift-header" data-lift="deadlift">💀 Deadlift</h2>
                     <div class="sort-controls">
                         <button class="sort-btn active" data-lift="deadlift">Sort by PR</button>
                     </div>
@@ -119,7 +119,7 @@
 
         <div class="tab-content" id="total-tab">
             <div class="leaderboards">
-                <div class="leaderboard-section leaderboard-total">
+                <div class="leaderboard-section leaderboard-total focused" data-lift="total">
                     <h2>🏆 Total (Combined)</h2>
                     <div class="sort-controls">
                         <button class="sort-btn active" data-lift="total">Sort by Total</button>

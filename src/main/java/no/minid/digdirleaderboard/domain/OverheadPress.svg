@@ -30,18 +30,18 @@
     <!-- Shoulders (for reference point) -->
     <circle cx="160" cy="128" r="2" fill="#444"/>
 
-    <!-- Arms: upper arms -->
-    <line x1="160" y1="128" x2="125" y2="145" class="line" />
-    <line x1="160" y1="128" x2="195" y2="145" class="line" />
+    <!-- Arms: upper arms angled upward -->
+    <line x1="160" y1="128" x2="135" y2="110" class="line" />
+    <line x1="160" y1="128" x2="185" y2="110" class="line" />
 
     <!-- Bar and plates (top position) -->
     <line x1="100" y1="70" x2="220" y2="70" class="bar" />
     <rect x="90"  y="58" width="10" height="24" rx="2" ry="2" class="plate"/>
     <rect x="220" y="58" width="10" height="24" rx="2" ry="2" class="plate"/>
 
-    <!-- Forearms connecting to the bar -->
-    <line x1="125" y1="145" x2="120" y2="70" class="line" />
-    <line x1="195" y1="145" x2="200" y2="70" class="line" />
+    <!-- Forearms connecting to the bar (shorter) -->
+    <line x1="135" y1="110" x2="120" y2="70" class="line" />
+    <line x1="185" y1="110" x2="200" y2="70" class="line" />
 
     <!-- Small hand dots -->
     <circle cx="120" cy="70" r="3.5" fill="#1e88e5" />

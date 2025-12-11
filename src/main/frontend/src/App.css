@@ -1,0 +1,83 @@
+.bench-table {
+    width: 100%;
+    margin: 0;              /* 👈 removes extra outer gap */
+    padding: 0;
+    border-collapse: collapse;
+    table-layout: fixed;    /* 👈 spreads columns evenly */
+    font-size: 1.1rem;
+}
+
+/* header cells */
+.bench-table th {
+    width: 100%;
+    padding: 8px 0px;
+    margin: 0;
+    position: relative;
+}
+
+/* body cells */
+.bench-table td {
+    width: 100%;
+    margin: 0;
+    padding: 8px 0px;
+    position: relative; /* 👈 important for ::after */
+}
+
+/* remove the old borders so only squiggles show */
+/* .bench-table tr td {
+    border-bottom: 1px dashed #555;
+} */
+
+/* squiggly line under header */
+
+.bench-table tbody td::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;   /* 👈 full width of the cell */
+    bottom: 0;
+    height: 6px;
+
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='6'><path d='M0 3 Q 25 2.5 50 3 T 100 3' stroke='%23000' fill='none' stroke-width='2' stroke-linecap='round'/></svg>");
+    background-repeat: repeat-x;
+    background-size: 60px 6px;
+    pointer-events: none;
+}
+
+/* optional: no line under last row */
+.bench-table tbody tr:last-child td::after {
+    background-image: none;
+}
+
+/* layout for tab buttons */
+.tab-bar {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2px; /* pull tabs down to sit on top of the border */
+    position: relative;
+    z-index: 10;
+}
+
+/* base tab style */
+.tab {
+    background: #fff;
+    padding: 4px 12px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    position: relative;
+    top: 8px; /* overlap border */
+}
+
+/* active tab highlight */
+.tab.active {
+    background: #ffe6a7;
+}
+
+/* Make tabs slightly "in front" of the border */
+.content-box {
+    position: relative;
+    z-index: 1;
+}

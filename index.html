@@ -26,6 +26,7 @@
         <div class="tab-navigation">
             <button class="tab-btn active" data-tab="lifts">Main Lifts</button>
             <button class="tab-btn" data-tab="total">Total</button>
+            <button class="tab-btn" data-tab="fun">Fun Lifts</button>
         </div>
 
         <!-- Add/Edit Athlete Modal -->
@@ -49,6 +50,12 @@
                     <div class="form-group">
                         <label for="deadlift">Deadlift (kg):</label>
                         <input type="number" id="deadlift" step="0.5" min="0" value="0">
+                    </div>
+                    <div class="form-group form-group-checkbox">
+                        <label>
+                            <input type="checkbox" id="gripper90kg">
+                            <span>💪 Can close 90kg gripper</span>
+                        </label>
                     </div>
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary">Save</button>
@@ -129,6 +136,16 @@
                         </thead>
                         <tbody></tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="fun-tab">
+            <div class="fun-lifts-container">
+                <div class="achievement-section">
+                    <h2>💪 90kg Gripper Club</h2>
+                    <p class="achievement-description">The elite few who have conquered the 90kg grip strengthener!</p>
+                    <div id="gripperHallOfFame" class="hall-of-fame"></div>
                 </div>
             </div>
         </div>

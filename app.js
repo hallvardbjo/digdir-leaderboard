@@ -125,6 +125,7 @@ class LeaderboardApp {
             document.getElementById('bench').value = athlete.bench;
             document.getElementById('squat').value = athlete.squat;
             document.getElementById('deadlift').value = athlete.deadlift;
+            document.getElementById('gripper90kg').checked = athlete.gripper90kg || false;
             this.editingAthleteId = athleteId;
         } else {
             // Add mode
@@ -170,9 +171,14 @@ class LeaderboardApp {
         sortedAthletes.forEach(athlete => {
             const athleteCard = document.createElement('div');
             athleteCard.className = 'athlete-card';
+
+            const gripperBadge = athlete.gripper90kg
+                ? '<span class="gripper-badge">💪 90kg Gripper</span>'
+                : '';
+
             athleteCard.innerHTML = `
                 <div class="athlete-card-info">
-                    <h3>${this.escapeHtml(athlete.name)}</h3>
+                    <h3>${this.escapeHtml(athlete.name)} ${gripperBadge}</h3>
                     <div class="athlete-stats">
                         <span>🏋️ Bench: <strong>${athlete.bench.toFixed(1)}</strong> kg</span>
                         <span>🦵 Squat: <strong>${athlete.squat.toFixed(1)}</strong> kg</span>
@@ -209,6 +215,7 @@ class LeaderboardApp {
         const bench = parseFloat(document.getElementById('bench').value) || 0;
         const squat = parseFloat(document.getElementById('squat').value) || 0;
         const deadlift = parseFloat(document.getElementById('deadlift').value) || 0;
+        const gripper90kg = document.getElementById('gripper90kg').checked;
 
         if (!name) {
             this.showToast('Please enter a name', 'error');
@@ -222,6 +229,7 @@ class LeaderboardApp {
             athlete.bench = bench;
             athlete.squat = squat;
             athlete.deadlift = deadlift;
+            athlete.gripper90kg = gripper90kg;
             await this.saveData();
             this.showToast('Athlete updated successfully!', 'success');
         } else {
@@ -231,7 +239,8 @@ class LeaderboardApp {
                 name,
                 bench,
                 squat,
-                deadlift
+                deadlift,
+                gripper90kg
             };
             this.athletes.push(newAthlete);
             await this.saveData();
@@ -291,6 +300,7 @@ class LeaderboardApp {
         this.renderLeaderboard('squat');
         this.renderLeaderboard('deadlift');
         this.renderLeaderboard('total');
+        this.renderGripperHallOfFame();
     }
 
     renderLeaderboard(liftType) {
@@ -436,6 +446,48 @@ class LeaderboardApp {
         if (header) {
             header.after(podiumContainer);
         }
+    }
+
+    renderGripperHallOfFame() {
+        const container = document.getElementById('gripperHallOfFame');
+        if (!container) return;
+
+        container.innerHTML = '';
+
+        // Get athletes who achieved the 90kg gripper
+        const achievers = this.athletes.filter(a => a.gripper90kg);
+
+        if (achievers.length === 0) {
+            container.innerHTML = `
+                <div class="empty-achievement">
+                    <p>🏋️ No one has conquered the 90kg gripper yet!</p>
+                    <p class="subtitle">Be the first to join the elite club!</p>
+                </div>
+            `;
+            return;
+        }
+
+        // Sort alphabetically for fairness since it's binary
+        const sortedAchievers = [...achievers].sort((a, b) =>
+            a.name.localeCompare(b.name)
+        );
+
+        sortedAchievers.forEach(athlete => {
+            const badge = document.createElement('div');
+            badge.className = 'achievement-badge';
+            badge.innerHTML = `
+                <div class="badge-icon">💪</div>
+                <div class="badge-name">${this.escapeHtml(athlete.name)}</div>
+                <div class="badge-subtitle">Gripper Master</div>
+            `;
+            container.appendChild(badge);
+        });
+
+        // Add achievement count
+        const countDiv = document.createElement('div');
+        countDiv.className = 'achievement-count';
+        countDiv.textContent = `${achievers.length} ${achievers.length === 1 ? 'person has' : 'people have'} achieved this feat!`;
+        container.appendChild(countDiv);
     }
 
     getRankDisplay(rank) {

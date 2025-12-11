@@ -1,0 +1,3 @@
+Daniel,137.5
+Alexander,120
+Hallvard,80

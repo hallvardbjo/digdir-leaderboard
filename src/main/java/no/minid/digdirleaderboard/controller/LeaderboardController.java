@@ -28,4 +28,10 @@ public class LeaderboardController {
         List<WeightRecord> leaderboardData = leaderboardService.getWeigthRecords("/data/deadlift.txt");
         return ResponseEntity.ok(leaderboardData);
     }
+
+    @GetMapping("/squat")
+    public ResponseEntity<List<WeightRecord>> getSquat() {
+        List<WeightRecord> leaderboardData = leaderboardService.getWeigthRecords("/data/squat.txt");
+        return ResponseEntity.ok(leaderboardData);
+    }
 }

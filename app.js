@@ -4,6 +4,7 @@ class LeaderboardApp {
         this.athletes = [];
         this.editingAthleteId = null;
         this.apiUrl = window.location.origin + '/api/athletes';
+        this.avatarSystem = new StickFigureAvatar();
         this.init();
     }
 
@@ -82,6 +83,19 @@ class LeaderboardApp {
         document.getElementById('importFile').addEventListener('change', (e) => {
             this.importData(e);
         });
+
+        // Avatar customization listeners
+        ['avatarHair', 'avatarFacialHair', 'avatarOutfit', 'avatarAccessory'].forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('change', () => this.updateAvatarPreview());
+            }
+        });
+
+        // Gripper checkbox to unlock avatar items
+        document.getElementById('gripper90kg').addEventListener('change', (e) => {
+            this.toggleGripperUnlocks(e.target.checked);
+        });
     }
 
     async loadData() {
@@ -126,16 +140,74 @@ class LeaderboardApp {
             document.getElementById('squat').value = athlete.squat;
             document.getElementById('deadlift').value = athlete.deadlift;
             document.getElementById('gripper90kg').checked = athlete.gripper90kg || false;
+
+            // Set avatar configuration
+            const avatar = athlete.avatar || this.avatarSystem.getDefaultConfig();
+            document.getElementById('avatarHair').value = avatar.hair;
+            document.getElementById('avatarFacialHair').value = avatar.facialHair;
+            document.getElementById('avatarOutfit').value = avatar.outfit;
+            document.getElementById('avatarAccessory').value = avatar.accessory;
+
+            this.toggleGripperUnlocks(athlete.gripper90kg || false);
             this.editingAthleteId = athleteId;
         } else {
             // Add mode
             modalTitle.textContent = 'Add Athlete';
             form.reset();
+            const defaultAvatar = this.avatarSystem.getDefaultConfig();
+            document.getElementById('avatarHair').value = defaultAvatar.hair;
+            document.getElementById('avatarFacialHair').value = defaultAvatar.facialHair;
+            document.getElementById('avatarOutfit').value = defaultAvatar.outfit;
+            document.getElementById('avatarAccessory').value = defaultAvatar.accessory;
+            this.toggleGripperUnlocks(false);
             this.editingAthleteId = null;
         }
 
+        this.updateAvatarPreview();
         modal.style.display = 'block';
         document.getElementById('athleteName').focus();
+    }
+
+    toggleGripperUnlocks(unlocked) {
+        const gripperOutfit = document.getElementById('outfitGripper');
+        const gripperBadge = document.getElementById('accessoryGripperBadge');
+
+        if (unlocked) {
+            gripperOutfit.disabled = false;
+            gripperOutfit.textContent = '💪 Gripper Champion Jersey';
+            gripperBadge.disabled = false;
+            gripperBadge.textContent = '💪 Gripper Badge';
+        } else {
+            gripperOutfit.disabled = true;
+            gripperOutfit.textContent = '🔒 Gripper Champion Jersey';
+            gripperBadge.disabled = true;
+            gripperBadge.textContent = '🔒 Gripper Badge';
+
+            // Reset to available options if locked item was selected
+            const currentOutfit = document.getElementById('avatarOutfit').value;
+            const currentAccessory = document.getElementById('avatarAccessory').value;
+            if (currentOutfit === 'gripper') {
+                document.getElementById('avatarOutfit').value = 'basic';
+            }
+            if (currentAccessory === 'gripperBadge') {
+                document.getElementById('avatarAccessory').value = 'none';
+            }
+        }
+        this.updateAvatarPreview();
+    }
+
+    updateAvatarPreview() {
+        const config = {
+            hair: document.getElementById('avatarHair').value,
+            facialHair: document.getElementById('avatarFacialHair').value,
+            outfit: document.getElementById('avatarOutfit').value,
+            accessory: document.getElementById('avatarAccessory').value
+        };
+
+        const preview = document.getElementById('avatarPreview');
+        if (preview) {
+            preview.innerHTML = this.avatarSystem.render(config, 120);
+        }
     }
 
     closeModal() {
@@ -217,6 +289,13 @@ class LeaderboardApp {
         const deadlift = parseFloat(document.getElementById('deadlift').value) || 0;
         const gripper90kg = document.getElementById('gripper90kg').checked;
 
+        const avatar = {
+            hair: document.getElementById('avatarHair').value,
+            facialHair: document.getElementById('avatarFacialHair').value,
+            outfit: document.getElementById('avatarOutfit').value,
+            accessory: document.getElementById('avatarAccessory').value
+        };
+
         if (!name) {
             this.showToast('Please enter a name', 'error');
             return;
@@ -230,6 +309,7 @@ class LeaderboardApp {
             athlete.squat = squat;
             athlete.deadlift = deadlift;
             athlete.gripper90kg = gripper90kg;
+            athlete.avatar = avatar;
             await this.saveData();
             this.showToast('Athlete updated successfully!', 'success');
         } else {
@@ -240,7 +320,8 @@ class LeaderboardApp {
                 bench,
                 squat,
                 deadlift,
-                gripper90kg
+                gripper90kg,
+                avatar
             };
             this.athletes.push(newAthlete);
             await this.saveData();
@@ -428,8 +509,13 @@ class LeaderboardApp {
 
             const podiumSpot = document.createElement('div');
             podiumSpot.className = `podium-spot ${positions[index]}`;
+
+            const avatarConfig = athlete.avatar || this.avatarSystem.getDefaultConfig();
+            const avatarSvg = this.avatarSystem.render(avatarConfig, 80);
+
             podiumSpot.innerHTML = `
                 <div class="podium-athlete">
+                    <div class="podium-avatar">${avatarSvg}</div>
                     <div class="podium-medal">${medals[index]}</div>
                     <div class="podium-name">${this.escapeHtml(athlete.name)}</div>
                     <div class="podium-value">${value.toFixed(1)} kg</div>
@@ -475,8 +561,12 @@ class LeaderboardApp {
         sortedAchievers.forEach(athlete => {
             const badge = document.createElement('div');
             badge.className = 'achievement-badge';
+
+            const avatarConfig = athlete.avatar || this.avatarSystem.getDefaultConfig();
+            const avatarSvg = this.avatarSystem.render(avatarConfig, 60);
+
             badge.innerHTML = `
-                <div class="badge-icon">💪</div>
+                <div class="badge-avatar">${avatarSvg}</div>
                 <div class="badge-name">${this.escapeHtml(athlete.name)}</div>
                 <div class="badge-subtitle">Gripper Master</div>
             `;

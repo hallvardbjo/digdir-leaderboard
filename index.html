@@ -57,6 +57,58 @@
                             <span>💪 Can close 90kg gripper</span>
                         </label>
                     </div>
+
+                    <div class="form-divider"></div>
+
+                    <h3 class="form-section-title">🎨 Customize Avatar</h3>
+                    <div class="avatar-preview-container">
+                        <div id="avatarPreview" class="avatar-preview"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="avatarHair">Hairstyle:</label>
+                        <select id="avatarHair" class="avatar-select">
+                            <option value="none">Bald</option>
+                            <option value="short" selected>Short Hair</option>
+                            <option value="spiky">Spiky</option>
+                            <option value="long">Long Hair</option>
+                            <option value="afro">Afro</option>
+                            <option value="mohawk">Mohawk</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="avatarFacialHair">Facial Hair:</label>
+                        <select id="avatarFacialHair" class="avatar-select">
+                            <option value="none" selected>Clean Shaven</option>
+                            <option value="beard">Beard</option>
+                            <option value="mustache">Mustache</option>
+                            <option value="goatee">Goatee</option>
+                            <option value="fullBeard">Full Beard</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="avatarOutfit">Outfit:</label>
+                        <select id="avatarOutfit" class="avatar-select">
+                            <option value="basic" selected>Basic</option>
+                            <option value="tank">Tank Top</option>
+                            <option value="hoodie">Hoodie</option>
+                            <option value="suit">Suit</option>
+                            <option value="gripper" id="outfitGripper" disabled>🔒 Gripper Champion Jersey</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="avatarAccessory">Accessory:</label>
+                        <select id="avatarAccessory" class="avatar-select">
+                            <option value="none" selected>None</option>
+                            <option value="glasses">Glasses</option>
+                            <option value="headband">Headband</option>
+                            <option value="gripperBadge" id="accessoryGripperBadge" disabled>🔒 Gripper Badge</option>
+                        </select>
+                    </div>
+
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary">Save</button>
                         <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
@@ -151,6 +203,7 @@
         </div>
     </div>
 
+    <script src="avatar.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

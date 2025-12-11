@@ -336,6 +336,58 @@ header h1 {
     font-size: 1rem;
 }
 
+.form-divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 25px 0;
+}
+
+.form-section-title {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.avatar-preview-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.avatar-preview {
+    background: var(--background);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.avatar-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.avatar-select:disabled option {
+    color: var(--text-secondary);
+}
+
 .form-actions {
     display: flex;
     gap: 12px;
@@ -531,6 +583,16 @@ header h1 {
 .podium-spot.third .podium-athlete {
     border-color: #cd7f32;
     background: linear-gradient(135deg, #ffffff 0%, #fed7aa 100%);
+}
+
+.podium-avatar {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.podium-avatar svg {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .podium-medal {
@@ -759,6 +821,16 @@ header h1 {
 .achievement-badge:hover {
     transform: translateY(-5px) scale(1.05);
     box-shadow: var(--shadow-lg);
+}
+
+.badge-avatar {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.badge-avatar svg {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .badge-icon {

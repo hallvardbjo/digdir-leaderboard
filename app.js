@@ -29,8 +29,19 @@ class LeaderboardApp {
             });
         });
 
-        // Add athlete button
-        document.getElementById('addAthleteBtn').addEventListener('click', () => {
+        // Manage Athletes button
+        document.getElementById('manageAthletesBtn').addEventListener('click', () => {
+            this.openManageModal();
+        });
+
+        // Close manage modal
+        document.querySelector('.close-manage').addEventListener('click', () => {
+            this.closeManageModal();
+        });
+
+        // Add new athlete from manage modal
+        document.getElementById('addNewAthleteBtn').addEventListener('click', () => {
+            this.closeManageModal();
             this.openModal();
         });
 
@@ -53,8 +64,12 @@ class LeaderboardApp {
         // Click outside modal to close
         window.addEventListener('click', (e) => {
             const modal = document.getElementById('athleteModal');
+            const manageModal = document.getElementById('manageModal');
             if (e.target === modal) {
                 this.closeModal();
+            }
+            if (e.target === manageModal) {
+                this.closeManageModal();
             }
         });
 
@@ -126,6 +141,67 @@ class LeaderboardApp {
         document.getElementById('athleteModal').style.display = 'none';
         document.getElementById('athleteForm').reset();
         this.editingAthleteId = null;
+    }
+
+    openManageModal() {
+        const modal = document.getElementById('manageModal');
+        modal.style.display = 'block';
+        this.renderAthletesList();
+    }
+
+    closeManageModal() {
+        document.getElementById('manageModal').style.display = 'none';
+    }
+
+    renderAthletesList() {
+        const container = document.getElementById('athletesList');
+        container.innerHTML = '';
+
+        if (this.athletes.length === 0) {
+            container.innerHTML = '<p class="empty-state">No athletes yet. Click "Add New Athlete" to get started!</p>';
+            return;
+        }
+
+        // Sort by name for easier finding
+        const sortedAthletes = [...this.athletes].sort((a, b) =>
+            a.name.localeCompare(b.name)
+        );
+
+        sortedAthletes.forEach(athlete => {
+            const athleteCard = document.createElement('div');
+            athleteCard.className = 'athlete-card';
+            athleteCard.innerHTML = `
+                <div class="athlete-card-info">
+                    <h3>${this.escapeHtml(athlete.name)}</h3>
+                    <div class="athlete-stats">
+                        <span>🏋️ Bench: <strong>${athlete.bench.toFixed(1)}</strong> kg</span>
+                        <span>🦵 Squat: <strong>${athlete.squat.toFixed(1)}</strong> kg</span>
+                        <span>💀 Deadlift: <strong>${athlete.deadlift.toFixed(1)}</strong> kg</span>
+                        <span>🏆 Total: <strong>${(athlete.bench + athlete.squat + athlete.deadlift).toFixed(1)}</strong> kg</span>
+                    </div>
+                </div>
+                <div class="athlete-card-actions">
+                    <button class="btn btn-edit" onclick="app.editFromManage(${athlete.id})">Edit</button>
+                    <button class="btn btn-danger" onclick="app.deleteFromManage(${athlete.id})">Delete</button>
+                </div>
+            `;
+            container.appendChild(athleteCard);
+        });
+    }
+
+    editFromManage(id) {
+        this.closeManageModal();
+        this.openModal(id);
+    }
+
+    async deleteFromManage(id) {
+        if (confirm('Are you sure you want to delete this athlete?')) {
+            this.athletes = this.athletes.filter(a => a.id !== id);
+            await this.saveData();
+            this.renderAthletesList();
+            this.render();
+            this.showToast('Athlete deleted', 'success');
+        }
     }
 
     async saveAthlete() {
@@ -240,7 +316,7 @@ class LeaderboardApp {
             const tbody = document.querySelector(`#${tableId} tbody`);
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="4" class="empty-state">
+                    <td colspan="3" class="empty-state">
                         <p>No athletes yet. Add your first athlete to get started!</p>
                     </td>
                 </tr>
@@ -278,10 +354,6 @@ class LeaderboardApp {
                     <td><span class="rank">${rank}</span></td>
                     <td><span class="athlete-name">${this.escapeHtml(athlete.name)}</span></td>
                     <td><span class="pr-value">${value.toFixed(1)}</span></td>
-                    <td class="actions">
-                        <button class="btn btn-edit" onclick="app.openModal(${athlete.id})">Edit</button>
-                        <button class="btn btn-danger" onclick="app.deleteAthlete(${athlete.id})">Delete</button>
-                    </td>
                 `;
                 tbody.appendChild(row);
             });
@@ -308,10 +380,6 @@ class LeaderboardApp {
                     <td><span class="rank">${this.getRankDisplay(rank)}</span></td>
                     <td><span class="athlete-name">${this.escapeHtml(athlete.name)}</span></td>
                     <td><span class="pr-value">${value.toFixed(1)}</span></td>
-                    <td class="actions">
-                        <button class="btn btn-edit" onclick="app.openModal(${athlete.id})">Edit</button>
-                        <button class="btn btn-danger" onclick="app.deleteAthlete(${athlete.id})">Delete</button>
-                    </td>
                 `;
                 tbody.appendChild(row);
             });
@@ -355,10 +423,6 @@ class LeaderboardApp {
                     <div class="podium-medal">${medals[index]}</div>
                     <div class="podium-name">${this.escapeHtml(athlete.name)}</div>
                     <div class="podium-value">${value.toFixed(1)} kg</div>
-                    <div class="podium-actions">
-                        <button class="btn btn-edit btn-small" onclick="app.openModal(${athlete.id})">Edit</button>
-                        <button class="btn btn-danger btn-small" onclick="app.deleteAthlete(${athlete.id})">Del</button>
-                    </div>
                 </div>
                 <div class="podium-stand" style="height: ${heights[index]}">
                     <div class="podium-rank">${actualRank}</div>
@@ -367,10 +431,10 @@ class LeaderboardApp {
             podiumContainer.appendChild(podiumSpot);
         });
 
-        // Insert podium after sort controls but before the table
-        const sortControls = section.querySelector('.sort-controls');
-        if (sortControls) {
-            sortControls.after(podiumContainer);
+        // Insert podium after h2 header but before the table
+        const header = section.querySelector('h2');
+        if (header) {
+            header.after(podiumContainer);
         }
     }
 

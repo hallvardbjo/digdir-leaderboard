@@ -14,7 +14,7 @@
         </header>
 
         <div class="controls">
-            <button id="addAthleteBtn" class="btn btn-primary">+ Add Athlete</button>
+            <button id="manageAthletesBtn" class="btn btn-primary">👥 Manage Athletes</button>
             <button id="exportBtn" class="btn btn-secondary">Export Data</button>
             <label for="importFile" class="btn btn-secondary">
                 Import Data
@@ -58,21 +58,27 @@
             </div>
         </div>
 
+        <!-- Manage Athletes Modal -->
+        <div id="manageModal" class="modal">
+            <div class="modal-content modal-large">
+                <span class="close-manage">&times;</span>
+                <h2>Manage Athletes</h2>
+                <button id="addNewAthleteBtn" class="btn btn-primary" style="margin-bottom: 20px;">+ Add New Athlete</button>
+                <div id="athletesList" class="athletes-list"></div>
+            </div>
+        </div>
+
         <!-- Leaderboards -->
         <div class="tab-content active" id="lifts-tab">
             <div class="leaderboards">
                 <div class="leaderboard-section" data-lift="squat">
                     <h2 class="lift-header" data-lift="squat">🦵 Squat</h2>
-                    <div class="sort-controls">
-                        <button class="sort-btn active" data-lift="squat">Sort by PR</button>
-                    </div>
                     <table class="leaderboard-table" id="squatTable">
                         <thead>
                             <tr>
                                 <th>Rank</th>
                                 <th>Name</th>
                                 <th>PR (kg)</th>
-                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -81,16 +87,12 @@
 
                 <div class="leaderboard-section focused" data-lift="bench">
                     <h2 class="lift-header" data-lift="bench">🏋️ Bench Press</h2>
-                    <div class="sort-controls">
-                        <button class="sort-btn active" data-lift="bench">Sort by PR</button>
-                    </div>
                     <table class="leaderboard-table" id="benchTable">
                         <thead>
                             <tr>
                                 <th>Rank</th>
                                 <th>Name</th>
                                 <th>PR (kg)</th>
-                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -99,16 +101,12 @@
 
                 <div class="leaderboard-section" data-lift="deadlift">
                     <h2 class="lift-header" data-lift="deadlift">💀 Deadlift</h2>
-                    <div class="sort-controls">
-                        <button class="sort-btn active" data-lift="deadlift">Sort by PR</button>
-                    </div>
                     <table class="leaderboard-table" id="deadliftTable">
                         <thead>
                             <tr>
                                 <th>Rank</th>
                                 <th>Name</th>
                                 <th>PR (kg)</th>
-                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -121,16 +119,12 @@
             <div class="leaderboards">
                 <div class="leaderboard-section leaderboard-total focused" data-lift="total">
                     <h2>🏆 Total (Combined)</h2>
-                    <div class="sort-controls">
-                        <button class="sort-btn active" data-lift="total">Sort by Total</button>
-                    </div>
                     <table class="leaderboard-table" id="totalTable">
                         <thead>
                             <tr>
                                 <th>Rank</th>
                                 <th>Name</th>
                                 <th>Total (kg)</th>
-                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody></tbody>

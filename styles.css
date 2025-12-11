@@ -229,6 +229,65 @@ header h1 {
     color: var(--text-primary);
 }
 
+.modal-large {
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.athletes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.athlete-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--background);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.athlete-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-md);
+    transform: translateX(5px);
+}
+
+.athlete-card-info h3 {
+    margin: 0 0 10px 0;
+    color: var(--text-primary);
+    font-size: 1.3rem;
+}
+
+.athlete-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+.athlete-stats span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.athlete-stats strong {
+    color: var(--primary-color);
+}
+
+.athlete-card-actions {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
 .form-group {
     margin-bottom: 20px;
 }
@@ -280,11 +339,13 @@ header h1 {
     overflow: visible;
     flex: 0 1 25%;
     min-width: 280px;
+    margin-top: 60px;
 }
 
 .leaderboard-section.focused {
     flex: 0 1 50%;
     min-width: 400px;
+    margin-top: 0;
 }
 
 .leaderboard-section:hover {
@@ -541,19 +602,15 @@ header h1 {
 }
 
 .leaderboard-table th:nth-child(1) {
-    width: 15%;
-}
-
-.leaderboard-table th:nth-child(2) {
-    width: 30%;
-}
-
-.leaderboard-table th:nth-child(3) {
     width: 20%;
 }
 
-.leaderboard-table th:nth-child(4) {
-    width: 35%;
+.leaderboard-table th:nth-child(2) {
+    width: 50%;
+}
+
+.leaderboard-table th:nth-child(3) {
+    width: 30%;
 }
 
 .leaderboard-table td {
@@ -697,6 +754,25 @@ header h1 {
 
     .podium-athlete {
         width: 100%;
+    }
+
+    .athlete-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .athlete-card-actions {
+        width: 100%;
+    }
+
+    .athlete-card-actions .btn {
+        flex: 1;
+    }
+
+    .athlete-stats {
+        flex-direction: column;
+        gap: 8px;
     }
 }
 

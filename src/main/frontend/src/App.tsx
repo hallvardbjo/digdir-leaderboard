@@ -1,8 +1,9 @@
 import "./App.css";
 
 import { useEffect, useState } from "react";
-import { getMessage } from "./api/leaderboard.ts";
+import { getBench, getSquat, getDeadlift } from "./api/leaderboard.ts";
 import type { Data } from "./api/data.ts";
+import { Podium } from "./component/Podium";
 
 function App() {
   const [datas, setDatas] = useState<Data[]>([]);
@@ -11,13 +12,29 @@ function App() {
 
 
   useEffect(() => {
-    getMessage()
-      .then((data) => {
+    async function load() {
+      try {
+        setStatus("Loading...");
+
+        let data: Data[];
+
+        if (activeTab === "bench") {
+          data = await getBench();
+        } else if (activeTab === "deadlift") {
+          data = await getDeadlift();
+        } else {
+          data = await getSquat();
+        }
+
         setDatas(data);
         setStatus("");
-      })
-      .catch((err) => setStatus("Error: " + err.message));
-  }, []);
+      } catch (err) {
+        setStatus("Error: " + (err as Error).message);
+      }
+    }
+
+    load();
+  }, [activeTab]);
 
   if (status) {
     return <p>{status}</p>;
@@ -25,7 +42,7 @@ function App() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1>Bench list</h1>
+      <h1 style={{ textAlign: "center" }}>Digdir strength list</h1>
 
       {/* TAB BAR */}
       <div className="tab-bar">
@@ -46,7 +63,7 @@ function App() {
           className={`tab doodle-border ${activeTab === "squat" ? "active" : ""}`}
           onClick={() => setActiveTab("squat")}
         >
-          Deadlift
+          Squat
         </button>
       </div>
 
@@ -79,7 +96,10 @@ function App() {
           </tbody>
         </table>
       </div>
+      {/* 🏆 podium */}
+      <Podium entries={datas} />
     </div>
+
   );
 
 

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="320" height="320" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+    <!-- ========== STYLE ========== -->
+    <defs>
+        <style><![CDATA[
+      .line { stroke:#222; stroke-width:6; stroke-linecap:round; fill:none; }
+      .thin { stroke-width:4; }
+      .bar  { stroke:#1e88e5; stroke-width:8; stroke-linecap:round; }
+      .plate { fill:#1e88e5; }
+      .ground { stroke:#999; stroke-width:2; stroke-linecap:round; }
+    ]]></style>
+    </defs>
+
+    <!-- ========== BACKGROUND GUIDES ========== -->
+
+    <!-- ========== STICK FIGURE ========== -->
+    <!-- Head -->
+    <circle cx="160" cy="85" r="18" class="line" />
+
+    <!-- Torso -->
+    <line x1="160" y1="103" x2="160" y2="175" class="line" />
+
+    <!-- Hips to feet (legs) -->
+    <line x1="160" y1="175" x2="135" y2="230" class="line" />
+    <line x1="160" y1="175" x2="185" y2="230" class="line" />
+    <!-- Feet -->
+    <line x1="125" y1="230" x2="145" y2="230" class="thin" />
+    <line x1="175" y1="230" x2="195" y2="230" class="thin" />
+
+    <!-- Shoulders (for reference point) -->
+    <circle cx="160" cy="128" r="2" fill="#444"/>
+
+    <!-- Arms: upper arms angled upward -->
+    <line x1="160" y1="128" x2="135" y2="110" class="line" />
+    <line x1="160" y1="128" x2="185" y2="110" class="line" />
+
+    <!-- Forearms connecting to the bar (shorter) -->
+    <line x1="135" y1="110" x2="120" y2="70" class="line" />
+    <line x1="185" y1="110" x2="200" y2="70" class="line" />
+</svg>

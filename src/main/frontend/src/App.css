@@ -81,3 +81,110 @@
     position: relative;
     z-index: 1;
 }
+
+
+
+
+/*Podium */
+
+
+
+/* Podium container */
+.podium-wrapper {
+    width: 80%;
+    margin: 0 auto 20px auto;
+}
+
+/* “Top 3” title */
+.podium-title {
+    margin: 0 0 8px 0;
+    text-align: center;
+}
+
+/* Stage row */
+.podium-stage {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 1.5rem;
+    margin-bottom: 16px;
+}
+
+/* Each column (1st, 2nd, 3rd) */
+.podium-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Emoji / letter above the block */
+.podium-figure {
+    font-size: 2rem;
+    margin-bottom: 4px;
+    width: 50%;
+}
+
+/* The actual podium block */
+.podium-block {
+    width: 80px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 6px;
+    background: #fff;
+}
+
+/* Heights for 1st / 2nd / 3rd */
+.block-1 {
+    height: 120px; /* tallest */
+}
+.block-2 {
+    height: 90px;
+}
+.block-3 {
+    height: 70px;
+}
+
+/* Number on the block (1,2,3) */
+.podium-place {
+    font-size: 1.4rem;
+}
+
+/* Name + weight text */
+.podium-name {
+    margin-top: 6px;
+    font-size: 1rem;
+}
+.podium-weight {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.podium-figure,
+.podium-figure img {
+    border: none !important;
+    box-shadow: none !important;
+    filter: none !important; /* Removes doodle “wiggle” from images */
+    background: none !important;
+}
+
+.podium-figure {
+    position: relative;
+    height: 90px; /* enough space for stickman + crown */
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; /* stickman sits at bottom */
+    margin-bottom: -10px; /* overlaps podium block */
+}
+
+/* Stick figure */
+.podium-img.stickman {
+    height: 120px;
+    width: auto;
+    z-index: 2;
+}
+
+/* Crown positioning */
+.podium-img.crown {
+width: 50%;
+}

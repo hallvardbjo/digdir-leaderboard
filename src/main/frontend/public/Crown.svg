@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300" height="200" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title desc" role="img">
+    <title id="title">Gold Crown</title>
+    <desc id="desc">A stylized gold crown with multiple points.</desc>
+
+    <!-- Background transparent -->
+    <rect width="100%" height="100%" fill="none"/>
+
+    <!-- Crown base with symmetric peaks -->
+    <path d="M50 150 L250 150 L240 120 L220 90 L200 120 L180 80 L160 120 L140 70 L120 120 L100 80 L80 120 L60 90 Z"
+          fill="gold" stroke="#b8860b" stroke-width="4" />
+</svg>

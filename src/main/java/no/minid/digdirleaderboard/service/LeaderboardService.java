@@ -16,21 +16,23 @@ public class LeaderboardService {
     public List<WeightRecord> getWeigthRecords(String filePath) {
         List<WeightRecord> records = new ArrayList<>();
 
-        try (InputStream is = getClass().getResourceAsStream(filePath);
-             BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+        try (InputStream is = getClass().getResourceAsStream(filePath)) {
+            if (is == null) {
+                throw new RuntimeException("File not found: " + filePath);
+            }
 
-            String line;
-            while ((line = reader.readLine()) != null) {
-                // Parse each line based on your file format
-                // Example for CSV: name,weight
-                String[] parts = line.split(",");
-                records.add(new WeightRecord(
-                        parts[0].trim(),
-                        Double.parseDouble(parts[1].trim())
-                ));
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] parts = line.split(",");
+                    records.add(new WeightRecord(
+                            parts[0].trim(),
+                            Double.parseDouble(parts[1].trim())
+                    ));
+                }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Failed to read bench data", e);
+            throw new RuntimeException("Failed to read bench.txt data", e);
         }
 
         return records;

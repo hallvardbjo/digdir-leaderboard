@@ -48,3 +48,36 @@
 .bench-table tbody tr:last-child td::after {
     background-image: none;
 }
+
+/* layout for tab buttons */
+.tab-bar {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2px; /* pull tabs down to sit on top of the border */
+    position: relative;
+    z-index: 10;
+}
+
+/* base tab style */
+.tab {
+    background: #fff;
+    padding: 4px 12px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    position: relative;
+    top: 8px; /* overlap border */
+}
+
+/* active tab highlight */
+.tab.active {
+    background: #ffe6a7;
+}
+
+/* Make tabs slightly "in front" of the border */
+.content-box {
+    position: relative;
+    z-index: 1;
+}

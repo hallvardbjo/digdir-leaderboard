@@ -28,11 +28,7 @@ function App() {
       <h1>Bench list</h1>
 
       {/* TAB BAR */}
-      <div className="tab-bar" style={{          padding: "0px",
-        marginTop: "0px",
-        width: "80%",
-        marginLeft: "auto",
-        marginRight: "auto",}}>
+      <div className="tab-bar">
         <button
           className={`tab doodle-border ${activeTab === "bench" ? "active" : ""}`}
           onClick={() => setActiveTab("bench")}

@@ -1,13 +1,15 @@
 // Data Management
 class LeaderboardApp {
     constructor() {
-        this.athletes = this.loadData();
+        this.athletes = [];
         this.editingAthleteId = null;
+        this.apiUrl = window.location.origin + '/api/athletes';
         this.init();
     }
 
-    init() {
+    async init() {
         this.setupEventListeners();
+        await this.loadData();
         this.render();
     }
 
@@ -52,13 +54,32 @@ class LeaderboardApp {
         });
     }
 
-    loadData() {
-        const data = localStorage.getItem('leaderboardData');
-        return data ? JSON.parse(data) : [];
+    async loadData() {
+        try {
+            const response = await fetch(this.apiUrl);
+            if (!response.ok) throw new Error('Failed to load data');
+            this.athletes = await response.json();
+        } catch (error) {
+            console.error('Error loading data:', error);
+            this.showToast('Failed to load data from server', 'error');
+            this.athletes = [];
+        }
     }
 
-    saveData() {
-        localStorage.setItem('leaderboardData', JSON.stringify(this.athletes));
+    async saveData() {
+        try {
+            const response = await fetch(this.apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(this.athletes)
+            });
+            if (!response.ok) throw new Error('Failed to save data');
+        } catch (error) {
+            console.error('Error saving data:', error);
+            this.showToast('Failed to save data to server', 'error');
+        }
     }
 
     openModal(athleteId = null) {
@@ -92,7 +113,7 @@ class LeaderboardApp {
         this.editingAthleteId = null;
     }
 
-    saveAthlete() {
+    async saveAthlete() {
         const name = document.getElementById('athleteName').value.trim();
         const bench = parseFloat(document.getElementById('bench').value) || 0;
         const squat = parseFloat(document.getElementById('squat').value) || 0;
@@ -110,6 +131,7 @@ class LeaderboardApp {
             athlete.bench = bench;
             athlete.squat = squat;
             athlete.deadlift = deadlift;
+            await this.saveData();
             this.showToast('Athlete updated successfully!', 'success');
         } else {
             // Add new athlete
@@ -121,18 +143,18 @@ class LeaderboardApp {
                 deadlift
             };
             this.athletes.push(newAthlete);
+            await this.saveData();
             this.showToast('Athlete added successfully!', 'success');
         }
 
-        this.saveData();
         this.closeModal();
         this.render();
     }
 
-    deleteAthlete(id) {
+    async deleteAthlete(id) {
         if (confirm('Are you sure you want to delete this athlete?')) {
             this.athletes = this.athletes.filter(a => a.id !== id);
-            this.saveData();
+            await this.saveData();
             this.render();
             this.showToast('Athlete deleted', 'success');
         }
@@ -229,13 +251,13 @@ class LeaderboardApp {
         if (!file) return;
 
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
             try {
                 const data = JSON.parse(e.target.result);
                 if (Array.isArray(data)) {
                     if (confirm('This will replace all current data. Continue?')) {
                         this.athletes = data;
-                        this.saveData();
+                        await this.saveData();
                         this.render();
                         this.showToast('Data imported successfully!', 'success');
                     }

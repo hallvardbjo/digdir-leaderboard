@@ -6,32 +6,43 @@ A modern, interactive web-based leaderboard for tracking workout Personal Record
 
 - **Track Multiple Athletes**: Add and manage multiple athletes with their PRs
 - **Four Leaderboards**: Separate rankings for Bench Press, Squat, Deadlift, and Combined Total
-- **Local Storage**: All data is saved in your browser's local storage
+- **Persistent Storage**: Data saved to server file - works across all browsers and devices!
+- **Shared Access**: Everyone on your network can access and update the same leaderboard
 - **Export/Import**: Backup and restore your data with JSON export/import
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
 - **Real-time Updates**: Leaderboards update instantly when you add or edit records
 - **Visual Rankings**: Gold 🥇, Silver 🥈, and Bronze 🥉 medals for top 3
 
-## Getting Started
+## Quick Start
 
-### Option 1: Open Directly in Browser
-Simply open `index.html` in your web browser. That's it!
+### With Backend (Recommended - Persistent Data)
 
-### Option 2: Use a Local Server
-For a better development experience:
-
+1. **Install dependencies**:
 ```bash
-# Using Python 3
-python3 -m http.server 8000
-
-# Or using Python 2
-python -m SimpleHTTPServer 8000
-
-# Or using Node.js (install http-server globally first)
-npx http-server -p 8000
+npm install
 ```
 
-Then navigate to `http://localhost:8000` in your browser.
+2. **Start the server**:
+```bash
+npm start
+```
+
+3. **Open your browser** and navigate to:
+```
+http://localhost:3000
+```
+
+**That's it!** Your data is now saved on the server and accessible from any browser.
+
+📖 **See [BACKEND-SETUP.md](BACKEND-SETUP.md) for detailed backend documentation**
+
+### Without Backend (Browser-Only Mode)
+
+If you just want to try it out locally without installing Node.js:
+
+Simply open `index.html` in your web browser. 
+
+⚠️ Note: This mode uses browser localStorage, so data is browser-specific and not shared.
 
 ## Usage
 
@@ -43,30 +54,56 @@ Then navigate to `http://localhost:8000` in your browser.
 
 ## Data Persistence
 
-All data is stored locally in your browser using localStorage. This means:
-- ✅ No server required
-- ✅ Works offline
-- ✅ Private - your data never leaves your browser
-- ⚠️ Data is browser-specific (use Export/Import to transfer between browsers)
-- ⚠️ Clearing browser data will erase the leaderboard (make backups!)
+### With Backend Server (Default)
+All data is stored in `data/leaderboard-data.json` on the server. This means:
+- ✅ Works across all browsers and devices
+- ✅ Shared among all users on the network
+- ✅ Survives browser restarts and updates
+- ✅ Easy to backup (just copy the file)
+- ✅ No data loss when clearing browser cache
+
+**Network Access:** Once the server is running, anyone on your network can access it at:
+- Local: `http://localhost:3000`
+- Network: `http://YOUR_IP_ADDRESS:3000`
+
+**Data Location:** `data/leaderboard-data.json`
+
+### Browser-Only Mode (Fallback)
+If you open `index.html` directly without the server:
+- ⚠️ Data stored in browser's localStorage
+- ⚠️ Browser-specific (use Export/Import to transfer)
+- ⚠️ Lost when clearing browser data
+- ℹ️ Good for testing or personal use only
 
 ## Deployment
 
-### GitHub Pages
-1. Push this repository to GitHub
-2. Go to Settings > Pages
-3. Select the branch to deploy (usually `main`)
-4. Your leaderboard will be live at `https://yourusername.github.io/digdir-leaderboard`
+### Easy Cloud Deployment (Free)
 
-### Netlify
-1. Drag and drop the project folder to [Netlify Drop](https://app.netlify.com/drop)
-2. Or connect your GitHub repository for automatic deployments
+#### Render.com (Recommended)
+1. Push to GitHub
+2. Create account at [render.com](https://render.com)
+3. New → Web Service
+4. Connect your repo
+5. Build: `npm install`
+6. Start: `npm start`
+7. Deploy! 🚀
 
-### Vercel
+#### Railway.app
+1. Push to GitHub
+2. Go to [railway.app](https://railway.app)
+3. New Project → Deploy from GitHub
+4. Auto-detects and deploys
+5. Done! 🎉
+
+### Local Network (Office)
+Keep server running on one office computer:
 ```bash
-npm install -g vercel
-vercel
+npm start
 ```
+
+Everyone access at: `http://COMPUTER_IP:3000`
+
+**See [BACKEND-SETUP.md](BACKEND-SETUP.md) for detailed deployment options**
 
 ## Customization
 
@@ -92,12 +129,18 @@ To add additional exercises (e.g., Overhead Press):
 
 ## Tech Stack
 
+**Frontend:**
 - **HTML5**: Structure
 - **CSS3**: Styling with CSS Grid and Flexbox
 - **Vanilla JavaScript**: Logic and interactivity
-- **LocalStorage API**: Data persistence
+- **Fetch API**: Communication with backend
 
-No frameworks, no build tools, no dependencies. Just modern web standards!
+**Backend:**
+- **Node.js**: Runtime environment
+- **Express**: Web server framework
+- **File System**: JSON file-based database
+
+Minimal dependencies, easy to understand and maintain!
 
 ## Browser Support
 

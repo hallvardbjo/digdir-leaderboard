@@ -1,40 +1,69 @@
 package no.minid.digdirleaderboard.service;
 
+import lombok.RequiredArgsConstructor;
 import no.minid.digdirleaderboard.domain.WeightRecord;
+import no.minid.digdirleaderboard.exception.ResourceNotFoundException;
+import no.minid.digdirleaderboard.repository.WeightRecordRepository;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class LeaderboardService {
 
-    public List<WeightRecord> getWeigthRecords(String filePath) {
-        List<WeightRecord> records = new ArrayList<>();
+    private final WeightRecordRepository weightRecordRepository;
+    private static final List<String> VALID_EXERCISE_TYPES = Arrays.asList("bench", "deadlift", "squat");
 
-        try (InputStream is = getClass().getResourceAsStream(filePath)) {
-            if (is == null) {
-                throw new RuntimeException("File not found: " + filePath);
-            }
+    public List<WeightRecord> getWeightRecordsByExerciseType(String exerciseType) {
+        validateExerciseType(exerciseType);
+        return weightRecordRepository.findByExerciseTypeOrderByWeightDesc(exerciseType);
+    }
 
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    String[] parts = line.split(",");
-                    records.add(new WeightRecord(
-                            parts[0].trim(),
-                            Double.parseDouble(parts[1].trim())
-                    ));
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to read bench.txt data", e);
+    public WeightRecord addWeightRecord(String name, double weight, String exerciseType) {
+        validateWeightRecord(name, weight, exerciseType);
+        WeightRecord record = new WeightRecord(name, weight, exerciseType);
+        return weightRecordRepository.save(record);
+    }
+
+    public WeightRecord updateWeightRecord(Long id, String name, double weight, String exerciseType) {
+        validateWeightRecord(name, weight, exerciseType);
+        WeightRecord record = weightRecordRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Weight record not found with id: " + id));
+        record.setName(name);
+        record.setWeight(weight);
+        record.setExerciseType(exerciseType);
+        return weightRecordRepository.save(record);
+    }
+
+    public void deleteWeightRecord(Long id) {
+        if (!weightRecordRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Weight record not found with id: " + id);
         }
+        weightRecordRepository.deleteById(id);
+    }
 
-        return records;
+    public List<WeightRecord> getAllRecords() {
+        return weightRecordRepository.findAll();
+    }
+
+    private void validateExerciseType(String exerciseType) {
+        if (exerciseType == null || exerciseType.trim().isEmpty()) {
+            throw new IllegalArgumentException("Exercise type cannot be empty");
+        }
+        if (!VALID_EXERCISE_TYPES.contains(exerciseType.toLowerCase())) {
+            throw new IllegalArgumentException("Invalid exercise type. Must be one of: bench, deadlift, squat");
+        }
+    }
+
+    private void validateWeightRecord(String name, double weight, String exerciseType) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be empty");
+        }
+        if (weight <= 0) {
+            throw new IllegalArgumentException("Weight must be greater than 0");
+        }
+        validateExerciseType(exerciseType);
     }
 }

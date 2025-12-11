@@ -22,6 +22,12 @@
             </label>
         </div>
 
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+            <button class="tab-btn active" data-tab="lifts">Main Lifts</button>
+            <button class="tab-btn" data-tab="total">Total</button>
+        </div>
+
         <!-- Add/Edit Athlete Modal -->
         <div id="athleteModal" class="modal">
             <div class="modal-content">
@@ -53,77 +59,83 @@
         </div>
 
         <!-- Leaderboards -->
-        <div class="leaderboards">
-            <div class="leaderboard-section">
-                <h2>🏋️ Bench Press</h2>
-                <div class="sort-controls">
-                    <button class="sort-btn active" data-lift="bench">Sort by PR</button>
+        <div class="tab-content active" id="lifts-tab">
+            <div class="leaderboards">
+                <div class="leaderboard-section">
+                    <h2>🏋️ Bench Press</h2>
+                    <div class="sort-controls">
+                        <button class="sort-btn active" data-lift="bench">Sort by PR</button>
+                    </div>
+                    <table class="leaderboard-table" id="benchTable">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Name</th>
+                                <th>PR (kg)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
-                <table class="leaderboard-table" id="benchTable">
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Name</th>
-                            <th>PR (kg)</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
 
-            <div class="leaderboard-section">
-                <h2>🦵 Squat</h2>
-                <div class="sort-controls">
-                    <button class="sort-btn active" data-lift="squat">Sort by PR</button>
+                <div class="leaderboard-section">
+                    <h2>🦵 Squat</h2>
+                    <div class="sort-controls">
+                        <button class="sort-btn active" data-lift="squat">Sort by PR</button>
+                    </div>
+                    <table class="leaderboard-table" id="squatTable">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Name</th>
+                                <th>PR (kg)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
-                <table class="leaderboard-table" id="squatTable">
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Name</th>
-                            <th>PR (kg)</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
 
-            <div class="leaderboard-section">
-                <h2>💀 Deadlift</h2>
-                <div class="sort-controls">
-                    <button class="sort-btn active" data-lift="deadlift">Sort by PR</button>
+                <div class="leaderboard-section">
+                    <h2>💀 Deadlift</h2>
+                    <div class="sort-controls">
+                        <button class="sort-btn active" data-lift="deadlift">Sort by PR</button>
+                    </div>
+                    <table class="leaderboard-table" id="deadliftTable">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Name</th>
+                                <th>PR (kg)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
-                <table class="leaderboard-table" id="deadliftTable">
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Name</th>
-                            <th>PR (kg)</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
             </div>
+        </div>
 
-            <div class="leaderboard-section">
-                <h2>🏆 Total (Combined)</h2>
-                <div class="sort-controls">
-                    <button class="sort-btn active" data-lift="total">Sort by Total</button>
+        <div class="tab-content" id="total-tab">
+            <div class="leaderboards">
+                <div class="leaderboard-section leaderboard-total">
+                    <h2>🏆 Total (Combined)</h2>
+                    <div class="sort-controls">
+                        <button class="sort-btn active" data-lift="total">Sort by Total</button>
+                    </div>
+                    <table class="leaderboard-table" id="totalTable">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Name</th>
+                                <th>Total (kg)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
-                <table class="leaderboard-table" id="totalTable">
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Name</th>
-                            <th>Total (kg)</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
             </div>
         </div>
     </div>

@@ -14,6 +14,13 @@ class LeaderboardApp {
     }
 
     setupEventListeners() {
+        // Tab navigation
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                this.switchTab(e.target.dataset.tab);
+            });
+        });
+
         // Add athlete button
         document.getElementById('addAthleteBtn').addEventListener('click', () => {
             this.openModal();
@@ -158,6 +165,22 @@ class LeaderboardApp {
             this.render();
             this.showToast('Athlete deleted', 'success');
         }
+    }
+
+    switchTab(tabName) {
+        // Update tab buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.tab === tabName) {
+                btn.classList.add('active');
+            }
+        });
+
+        // Update tab content
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.getElementById(`${tabName}-tab`).classList.add('active');
     }
 
     render() {
